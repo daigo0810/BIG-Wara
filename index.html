@@ -1,18 +1,175 @@
-<!-- ここに HTML のコードを書きましょう。index.html というファイルの名前は変更しないでください -->
 <!DOCTYPE html>
 <html lang="ja">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>タイトル</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="stylesheet" type="text/css" href="style.css" />
+  
+  <title>鍵管理システム</title>
+  
 </head>
 
 <body>
-  <h1>タイトル</h1>
-  <img src="./images/example.png" alt="あざらし">
-  <script src="script.js"></script>
+  <h1>鍵管理システム</h1>
+  <div class="input">
+    <h3>学年</h3>
+    <select class="borrowerGrade">
+      <option>1</option>
+      <option>2</option>
+      <option>3</option>
+      <option>専</option>
+    </select>
+
+    <h3>クラス</h3>
+    <select class="borrowerClass">
+      <option>A</option>
+      <option>B</option>
+      <option>C</option>
+      <option>D</option>
+    </select>
+
+    <h3>番号</h3>
+    <input type="text" id="myNumber" name="myNumber" />
+
+    <h3>名前</h3>
+    <input type="text" id="yourName" name="yourName" />
+    <label for="key-select">鍵を選択</label>
+    <select id="key-select" class="key-select">
+      <option value="1-A">1-A</option>
+      <option value="1-B">1-B</option>
+      <option value="1-C">1-C</option>
+      <option value="1-D">1-D</option>
+      <option value="1-E">1-E</option>
+      <option value="2/3-A">2/3-A</option>
+      <option value="2/3-B">2/3-B</option>
+      <option value="2/3-C">2/3-C</option>
+      <option value="2/3-D">2/3-D</option>
+      <option value="専-A">専-A</option>
+      <option value="専-B">専-B</option>
+      <option value="専-C">専-C</option>
+      <option value="専-D">専-D</option>
+      <option value="教材準備室">教材準備室</option>
+      <option value="電気実習室">電気実習室</option>
+      <option value="図書室">図書室</option>
+      <option value="製図室">製図室</option>
+      <option value="自動車教室">自動車教室</option>
+      <option value="自動車実習室">自動車実習室</option>
+      <option value="音楽室">音楽室</option>
+      <option value="体育倉庫">体育倉庫</option>
+      <option value="陸上部">陸上部</option>
+      <option value="剣道部">剣道部</option>
+      <option value="硬式野球部">硬式野球部</option>
+      <option value="サッカー部">サッカー部</option>
+      <option value="バレー・バスケ部">バレー・バスケ部</option>
+      <option value="モノ部">モノ部</option>
+    </select>
+    <button onclick="borrowKey()">借りる</button>
+    <div id="borrower-info" class="borrower-info"></div>
+
+    <script>
+      let historyData = [];
+      let borrowedKeys = new Set();
+
+      // ページ読み込み時に履歴と貸出状態を復元
+      window.onload = function () {
+        const savedHistory = localStorage.getItem("historyData");
+        const savedBorrowed = localStorage.getItem("borrowedKeys");
+
+        if (savedHistory) {
+          historyData = JSON.parse(savedHistory);
+          historyData.forEach(item => {
+            if (!item.returnTime) {
+              borrowedKeys.add(item.key);
+              addHistoryToDOM(item);
+            }
+          });
+        }
+
+        if (savedBorrowed) {
+          borrowedKeys = new Set(JSON.parse(savedBorrowed));
+        }
+      };
+
+      function borrowKey() {
+        const selectedKey = document.getElementById("key-select").value;
+        const borrower = document.getElementById("yourName").value;
+        const grade = document.querySelector(".borrowerGrade").value;
+        const className = document.querySelector(".borrowerClass").value;
+        const number = document.getElementById("myNumber").value;
+
+        if (borrowedKeys.has(selectedKey)) {
+          alert(`「${selectedKey}」は現在貸出中です。返却されるまで借用できません。`);
+          return;
+        }
+
+        if (borrower && number) {
+          const displayDiv = document.getElementById("borrower-info");
+          displayDiv.textContent = `${selectedKey} の借用者: ${borrower}`;
+
+          const borrowTime = new Date();
+          const borrowTimeStr = borrowTime.toLocaleString();
+
+          const historyItem = {
+            key: selectedKey,
+            borrower,
+            grade,
+            className,
+            number,
+            borrowTime: borrowTimeStr,
+            returnTime: null
+          };
+
+          borrowedKeys.add(selectedKey);
+          historyData.push(historyItem);
+          addHistoryToDOM(historyItem);
+          saveToLocalStorage();
+        } else {
+          alert("名前と番号を入力してください。");
+        }
+      }
+
+      // 履歴をHTMLに追加
+      function addHistoryToDOM(historyItem) {
+        const historyList = document.getElementById("history-list");
+        const listItem = document.createElement("li");
+
+        const message = document.createElement("p");
+        message.textContent = `${historyItem.borrowTime} - ${historyItem.grade}年 ${historyItem.className}組 ${historyItem.number}番 ${historyItem.borrower} が「${historyItem.key}」を借用`;
+        
+
+        const returnButton = document.createElement("button");
+        returnButton.textContent = "返却";
+        // 返却ボタンのスタイルはCSSで制御しているのでinlineはなしにしました
+
+        returnButton.onclick = function () {
+          const returnTime = new Date().toLocaleString();
+          historyItem.returnTime = returnTime;
+
+          borrowedKeys.delete(historyItem.key);
+          alert(`返却時間: ${returnTime}`);
+
+          historyList.removeChild(listItem);
+          saveToLocalStorage();
+        };
+
+        listItem.appendChild(message);
+        listItem.appendChild(returnButton);
+        historyList.appendChild(listItem);
+      }
+
+      // localStorage に保存
+      function saveToLocalStorage() {
+        localStorage.setItem("historyData", JSON.stringify(historyData));
+        localStorage.setItem("borrowedKeys", JSON.stringify(Array.from(borrowedKeys)));
+      }
+    </script>
+  </div>
+  <h2>借用中</h2>
+  <ul id="history-list"></ul>
+ 
+
 </body>
 
 </html>
