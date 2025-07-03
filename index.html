@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="theme-color" content="#4a47a3" />
+  <link rel="stylesheet" href="keyManage.css" />
+  <script src="keyManage.js" defer></script>
+  <title>鍵管理システム</title>
+</head>
+
+<body>
+  <h1>鍵管理システム</h1>
+
+  <div class="layout-container">
+
+    <section class="input-area" aria-label="鍵借用フォーム">
+      <form id="borrow-form" autocomplete="off" novalidate>
+
+        <div class="form-group">
+          <label for="borrower-number">従業員番号</label>
+          <input type="text" id="borrower-number" name="borrowerNumber" pattern="^[0-9]+$" inputmode="numeric" required placeholder="例: 0000000" />
+        </div>
+
+        <div class="form-group">
+          <label for="borrower-grade">学年</label>
+          <select id="borrower-grade" name="borrowerGrade" required>
+            <option value="" disabled selected>選択してください</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="専">専</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="borrower-class">クラス</label>
+          <select id="borrower-class" name="borrowerClass" required>
+            <option value="" disabled selected>選択してください</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+            <option value="D">D</option>
+          </select>
+        </div>
+
+        
+
+        <div class="form-group">
+          <label for="borrower-name">名前</label>
+          <input type="text" id="borrower-name" name="borrowerName" required placeholder="例: 山田太郎" />
+        </div>
+
+        <div class="form-group">
+          <label for="key-select">鍵を選択</label>
+          <select id="key-select" name="keySelect" required>
+            <option value="" disabled selected>選択してください</option>
+            <optgroup label="教室キー">
+              <option value="1-A">1-A</option>
+              <option value="1-B">1-B</option>
+              <option value="1-C">1-C</option>
+              <option value="1-D">1-D</option>
+              <option value="1-E">1-E</option>
+              <option value="2/3-A">2/3-A</option>
+              <option value="2/3-B">2/3-B</option>
+              <option value="2/3-C">2/3-C</option>
+              <option value="2/3-D">2/3-D</option>
+              <option value="専-A">専-A</option>
+              <option value="専-B">専-B</option>
+              <option value="専-C">専-C</option>
+              <option value="専-D">専-D</option>
+            </optgroup>
+            <optgroup label="特別室">
+              <option value="教材準備室">教材準備室</option>
+              <option value="電気実習室">電気実習室</option>
+              <option value="図書室">図書室</option>
+              <option value="製図室">製図室</option>
+              <option value="自動車教室">自動車教室</option>
+              <option value="自動車実習室">自動車実習室</option>
+              <option value="音楽室">音楽室</option>
+              <option value="体育倉庫">体育倉庫</option>
+            </optgroup>
+            <optgroup label="部活動">
+              <option value="陸上部">陸上部</option>
+              <option value="剣道部">剣道部</option>
+              <option value="硬式野球部">硬式野球部</option>
+              <option value="サッカー部">サッカー部</option>
+              <option value="バレー・バスケ部">バレー・バスケ部</option>
+              <option value="モノ部">モノ部</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <button type="submit" id="borrow-button">借りる</button>
+      </form>
+
+      <div id="borrower-info" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="history-area" aria-label="借用中一覧">
+      <h2>借用中</h2>
+      <ul id="history-list" tabindex="0" aria-live="polite" aria-relevant="additions"></ul>
+    </section>
+
+  </div>
+
+  <!-- 返却者入力モーダル -->
+  <div id="modal-overlay" class="hidden"></div>
+  <div id="return-modal" role="dialog" aria-modal="true" aria-labelledby="return-modal-title" class="hidden">
+    <h3 id="return-modal-title">返却者情報を入力</h3>
+    <form id="return-form" autocomplete="off" novalidate>
+      
+      <div class="form-group">
+        <label for="return-number">番号</label>
+        <input type="text" id="return-number" name="returnNumber" pattern="^[0-9]+$" inputmode="numeric" required placeholder="例: 0000000" />
+      </div>
+
+      <div class="form-group">
+        <label for="return-grade">学年</label>
+        <select id="return-grade" name="returnGrade" required>
+          <option value="" disabled selected>選択してください</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="専">専</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="return-class">クラス</label>
+        <select id="return-class" name="returnClass" required>
+          <option value="" disabled selected>選択してください</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+        </select>
+      </div>
+
+
+      <div class="form-group">
+        <label for="return-name">名前</label>
+        <input type="text" id="return-name" name="returnName" required placeholder="例: 山田太郎" />
+      </div>
+
+      <button type="submit" id="confirm-return">返却確定</button>
+      <button type="button" id="cancel-return" class="cancel-btn">キャンセル</button>
+    </form>
+  </div>
+  <a href="history.html" class="history-link">借用履歴を見る</a>
+
+</body>
+
+</html>
