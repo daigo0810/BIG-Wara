@@ -6,7 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <meta name="theme-color" content="#000000" />
   <link rel="stylesheet" type="text/css" href="style.css" />
-  
+  <script src="script.js" defer></script>
+
   <title>鍵管理システム</title>
   
 </head>
@@ -68,106 +69,40 @@
     <button onclick="borrowKey()">借りる</button>
     <div id="borrower-info" class="borrower-info"></div>
 
-    <script>
-      let historyData = [];
-      let borrowedKeys = new Set();
-
-      // ページ読み込み時に履歴と貸出状態を復元
-      window.onload = function () {
-        const savedHistory = localStorage.getItem("historyData");
-        const savedBorrowed = localStorage.getItem("borrowedKeys");
-
-        if (savedHistory) {
-          historyData = JSON.parse(savedHistory);
-          historyData.forEach(item => {
-            if (!item.returnTime) {
-              borrowedKeys.add(item.key);
-              addHistoryToDOM(item);
-            }
-          });
-        }
-
-        if (savedBorrowed) {
-          borrowedKeys = new Set(JSON.parse(savedBorrowed));
-        }
-      };
-
-      function borrowKey() {
-        const selectedKey = document.getElementById("key-select").value;
-        const borrower = document.getElementById("yourName").value;
-        const grade = document.querySelector(".borrowerGrade").value;
-        const className = document.querySelector(".borrowerClass").value;
-        const number = document.getElementById("myNumber").value;
-
-        if (borrowedKeys.has(selectedKey)) {
-          alert(`「${selectedKey}」は現在貸出中です。返却されるまで借用できません。`);
-          return;
-        }
-
-        if (borrower && number) {
-          const displayDiv = document.getElementById("borrower-info");
-          displayDiv.textContent = `${selectedKey} の借用者: ${borrower}`;
-
-          const borrowTime = new Date();
-          const borrowTimeStr = borrowTime.toLocaleString();
-
-          const historyItem = {
-            key: selectedKey,
-            borrower,
-            grade,
-            className,
-            number,
-            borrowTime: borrowTimeStr,
-            returnTime: null
-          };
-
-          borrowedKeys.add(selectedKey);
-          historyData.push(historyItem);
-          addHistoryToDOM(historyItem);
-          saveToLocalStorage();
-        } else {
-          alert("名前と番号を入力してください。");
-        }
-      }
-
-      // 履歴をHTMLに追加
-      function addHistoryToDOM(historyItem) {
-        const historyList = document.getElementById("history-list");
-        const listItem = document.createElement("li");
-
-        const message = document.createElement("p");
-        message.textContent = `${historyItem.borrowTime} - ${historyItem.grade}年 ${historyItem.className}組 ${historyItem.number}番 ${historyItem.borrower} が「${historyItem.key}」を借用`;
-        
-
-        const returnButton = document.createElement("button");
-        returnButton.textContent = "返却";
-        // 返却ボタンのスタイルはCSSで制御しているのでinlineはなしにしました
-
-        returnButton.onclick = function () {
-          const returnTime = new Date().toLocaleString();
-          historyItem.returnTime = returnTime;
-
-          borrowedKeys.delete(historyItem.key);
-          alert(`返却時間: ${returnTime}`);
-
-          historyList.removeChild(listItem);
-          saveToLocalStorage();
-        };
-
-        listItem.appendChild(message);
-        listItem.appendChild(returnButton);
-        historyList.appendChild(listItem);
-      }
-
-      // localStorage に保存
-      function saveToLocalStorage() {
-        localStorage.setItem("historyData", JSON.stringify(historyData));
-        localStorage.setItem("borrowedKeys", JSON.stringify(Array.from(borrowedKeys)));
-      }
-    </script>
+   
   </div>
   <h2>借用中</h2>
   <ul id="history-list"></ul>
+  <!-- 返却者入力モーダル -->
+<div id="return-modal" style="display:none; position:fixed; top:20%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:20px; z-index:1000;">
+  <h3>返却者情報を入力</h3>
+  <label>学年:</label>
+  <select id="return-grade">
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>専</option>
+  </select>
+  <br>
+  <label>クラス:</label>
+  <select id="return-class">
+    <option>A</option>
+    <option>B</option>
+    <option>C</option>
+    <option>D</option>
+  </select>
+  <br>
+  <label>番号:</label>
+  <input type="text" id="return-number" />
+  <br>
+  <label>名前:</label>
+  <input type="text" id="return-name" />
+  <br><br>
+  <button id = "confirm-return">返却確定</button>
+  <br><br>
+  <button onclick="closeReturnModal()">キャンセル</button>
+</div>
+
  
 
 </body>
