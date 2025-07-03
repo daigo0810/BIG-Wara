@@ -1,0 +1,80 @@
+/* ベース設定 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  font-size: 17px;           /* 少し大きめで読みやすく */
+  line-height: 1.75;         /* 行間もゆったり */
+  padding: 30px;
+  background-color: #f4f6f9;
+  color: #2c3e50;            /* 濃すぎない落ち着いたネイビー */
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 30px;
+  margin-bottom: 28px;
+  color: #1f2937;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* 履歴リスト：2列グリッド */
+#history-list {
+  list-style: none;
+  padding: 0;
+  max-height: 700px;
+  overflow-y: auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* 履歴アイテム */
+#history-list li {
+  background-color: #ffffff;
+  padding: 18px 22px;       /* 少しゆとり */
+  border-radius: 8px;
+  border-left: 5px solid #3b82f6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  font-size: 16.5px;
+  font-weight: 500;          /* 少し太めで読みやすく */
+  color: #34495e;            /* 少し明るい紺色 */
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  word-break: break-word;
+}
+
+#history-list li span.status {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+#history-list li.unreturned {
+  border-left-color: #f59e0b;
+}
+
+#history-list li.unreturned span.status {
+  color: #d97706;
+}
+
+/* スクロールバー */
+#history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+#history-list::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;  /* 少し淡いグレー青 */
+  border-radius: 4px;
+}
+
+#history-list::-webkit-scrollbar-track {
+  background-color: #e5e7eb;
+}
