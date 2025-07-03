@@ -1,0 +1,243 @@
+/* Google Fonts: Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+/* ベースリセット */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', sans-serif;
+  color: #1e293b; /* 濃いネイビー系でコントラスト強め */
+}
+
+body {
+  background-color: #f0f4f8; /* 明るめグレー */
+  padding: 24px;
+  line-height: 1.7;
+  color: #1e293b;
+}
+
+/* タイトル */
+h1, h2, h3 {
+  color: #0f172a;
+  margin-bottom: 20px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+h1 {
+  margin-left: 46px;
+  font-size: 2rem;
+}
+
+/* 全体レイアウト */
+.layout-container {
+  display: flex;
+  gap: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+/* 共通パネルスタイル */
+.input-area, .history-area {
+  background-color: #ffffff;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #cbd5e1; /* やや濃いめボーダー */
+}
+
+.input-area {
+  flex: 1 1 340px;
+}
+
+.history-area {
+  flex: 2 1 700px;
+}
+
+/* 入力フォーム */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+/* input/select */
+input[type="text"],
+select {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #94a3b8;
+  background-color: #ffffff;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #22d3ee; /* シアンのアクセント */
+  box-shadow: 0 0 8px 2px rgba(34, 211, 238, 0.4);
+  background-color: #ffffff;
+  outline: none;
+}
+
+/* ボタン共通 */
+button {
+  padding: 12px 20px;
+  background-color: #2563eb; /* 鮮やかなブルー */
+  color: #ffffff;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+  user-select: none;
+  font-size: 1rem;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+button:hover,
+button:focus {
+  background-color: #0891b2; /* さわやかシアン */
+  box-shadow: 0 8px 20px rgba(8, 145, 178, 0.5);
+  transform: translateY(-2px);
+}
+
+/* キャンセルボタン */
+button.cancel-btn {
+  background-color: #e2e8f0;
+  color: #475569;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+button.cancel-btn:hover {
+  background-color: #cbd5e1;
+  color: #334155;
+}
+
+/* 借用者表示 */
+#borrower-info {
+  margin-top: 10px;
+  color: #475569;
+  font-weight: 500;
+  font-size: 0.95rem;
+  min-height: 1.4em;
+}
+
+/* 履歴リスト */
+#history-list {
+  list-style: none;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 6px;
+  margin-top: 12px;
+}
+
+#history-list li {
+  background-color: #f9fafb;
+  margin-bottom: 14px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+  font-size: 0.96rem;
+  border-left: 5px solid;
+  border-image: linear-gradient(180deg, #2563eb 0%, #22d3ee 100%);
+  border-image-slice: 1;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+#history-list li button {
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  background-color: #ef4444;
+  color: white;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+#history-list li button:hover {
+  background-color: #dc2626;
+}
+
+/* モーダル背景 */
+#modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+/* モーダル */
+#return-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 360px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transform: translate(-50%, -50%);
+  z-index: 101;
+  color: #1e293b;
+}
+
+/* 非表示クラス */
+.hidden {
+  display: none !important;
+}
+
+/* スクロールバーカスタム */
+#history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+#history-list::-webkit-scrollbar-thumb {
+  background-color: #60a5fa;
+  border-radius: 4px;
+}
+
+#history-list::-webkit-scrollbar-track {
+  background-color: #e5e7eb;
+}
+
+/* 履歴へのリンク */
+.history-link {
+  display: inline-block;
+  margin-top: 1.5em;
+  margin-left: 50px;
+  padding: 0.7em 1.4em;
+  background-color: #2563eb;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.history-link:hover {
+  background-color: #0891b2;
+}
